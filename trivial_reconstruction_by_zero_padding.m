@@ -3,10 +3,10 @@ load('brain.mat')
 figure("Name", "Original Image(Magnitude) in time domain"); 
 imshow(abs(im));
 
-try_recons_by_zero_padding(im, [0.4, 0.7], "V")
-try_recons_by_zero_padding(im, [0.4, 0.7], "H")
+trivial_recons_by_zero_padding(im, [0.4, 0.7], "V")
+trivial_recons_by_zero_padding(im, [0.4, 0.7], "H")
 
-function try_recons_by_zero_padding(im, range, flag)
+function trivial_recons_by_zero_padding(im, range, flag)
 %This function calls the recons_by_zero_padding functions over the image
 %and the range provided. Then prints the results. Which zero padding
 %function will be used is determined by the flag variable. Percentages of zero
