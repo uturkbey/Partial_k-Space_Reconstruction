@@ -8,16 +8,16 @@ function psnr_value = trivial_reconstruction_by_zero_padding(im, ratio, flag)
 %   -flag is a string value to indicate which function to be called. "V"
 %   for vertical and "H" for horizontal 
     if flag == "V"
-        figure("Name", "Reconstructed Image(Magnitude) in time domain (vertical)")
+%         figure("Name", "Reconstructed Image(Magnitude) in time domain (vertical)")
     else 
-        figure("Name", "Reconstructed Image(Magnitude) in time domain (horizontal)")
+%         figure("Name", "Reconstructed Image(Magnitude) in time domain (horizontal)")
     end 
     M_pk = fft2c(im);
     im_recons = recons_by_zero_padding(M_pk, ratio, flag);
-    subplot(2,2,1), imshow(abs(im)), title("m_p_k(x,y)");
-    subplot(2,2,2), imshow(abs(im_recons)), title("m(x,y)");
-    subplot(2,2,3), imshow(M_pk), title("M_p_k(k_x,k_y)");
-    subplot(2,2,4), imshow(fft2c(im_recons)), title("M(k_x,k_y)");
+%     subplot(2,2,1), imshow(abs(im)), title("m_p_k(x,y)");
+%     subplot(2,2,2), imshow(abs(im_recons)), title("m(x,y)");
+%     subplot(2,2,3), imshow(M_pk), title("M_p_k(k_x,k_y)");
+%     subplot(2,2,4), imshow(fft2c(im_recons)), title("M(k_x,k_y)");
     psnr_value = psnr(im_recons, im);
 end
 

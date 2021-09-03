@@ -1,4 +1,4 @@
-function pnsr_value = Conjugate_Synthesis_with_Phase_Correction(im, ratio)
+function psnr_value = Conjugate_Synthesis_with_Phase_Correction(im, ratio)
 %This function implements image reconstruction by conjugate synthesis
 %with phase correction algorithm 
 %   -im is the matrix of the image to be reconstructed
@@ -6,9 +6,9 @@ function pnsr_value = Conjugate_Synthesis_with_Phase_Correction(im, ratio)
     
 
     %Print initial data
-    figure("Name","Conjugate_Synthesis_with_Phase_Correction");
-    subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
-    subplot(2,5,6), imshow(fft2c(im)), title("Original k-Space Data");
+%     figure("Name","Conjugate_Synthesis_with_Phase_Correction");
+%     subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
+%     subplot(2,5,6), imshow(fft2c(im)), title("Original k-Space Data");
     
     M_pk = fft2c(im); %convert from image space to k-Space 
     [m, n] = size(im); %learn the dimensions of image
@@ -24,16 +24,16 @@ function pnsr_value = Conjugate_Synthesis_with_Phase_Correction(im, ratio)
     M_k(m*ratio:end,:) = conj(flip(flip(M_k(1:m*(1-ratio)+1,:),1),2)); %Conjugate sytnhesis
     image = ifft2c(M_k); %obtain desired image
   
-    pnsr_value = pnsr(image, im);
+    psnr_value = psnr(image, im);
   
     %plot data
-    subplot(2,5,2), imshow(M_pk), title("M_p_k(k_x,k_y)");
-    subplot(2,5,7), imshow(abs(m_pk)), title("m_p_k(x,y)");
-    subplot(2,5,3), imshow(M_s), title("M_s(k_x,k_y)");
-    subplot(2,5,8), imshow(abs(m_s)), title("m_s(x,y)");
-    subplot(2,5,4), imshow(abs(pc_m_pk)), title("p*(x,y)m_p_k(x,y)");
-    subplot(2,5,9), imshow(pc_M_pk), title("p*(k_x,k_y)M_p_k(k_x,k_y)");
-    subplot(2,5,5), imshow(M_k), title("M_k(k_x,k_y)");
-    subplot(2,5,10), imshow(image), title("m(x,y)"); 
-    figure("Name", "Difference"), imshow(abs(abs(im)-abs(image))*100, []);
+%     subplot(2,5,2), imshow(M_pk), title("M_p_k(k_x,k_y)");
+%     subplot(2,5,7), imshow(abs(m_pk)), title("m_p_k(x,y)");
+%     subplot(2,5,3), imshow(M_s), title("M_s(k_x,k_y)");
+%     subplot(2,5,8), imshow(abs(m_s)), title("m_s(x,y)");
+%     subplot(2,5,4), imshow(abs(pc_m_pk)), title("p*(x,y)m_p_k(x,y)");
+%     subplot(2,5,9), imshow(pc_M_pk), title("p*(k_x,k_y)M_p_k(k_x,k_y)");
+%     subplot(2,5,5), imshow(M_k), title("M_k(k_x,k_y)");
+%     subplot(2,5,10), imshow(image), title("m(x,y)"); 
+%     figure("Name", "Difference"), imshow(abs(abs(im)-abs(image))*100, []);
 end

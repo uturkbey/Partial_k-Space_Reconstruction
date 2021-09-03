@@ -1,4 +1,4 @@
-function pnsr_value = Homodyne_Reconstruction(im, ratio, weightingType)   
+function psnr_value = Homodyne_Reconstruction(im, ratio, weightingType)   
 %This function implements image reconstruction by Homodyne algorithm 
 %   -im is the matrix of the image to be reconstructed
 %   -ratio is the amount of data to be hold after dropping k-Space
@@ -6,9 +6,9 @@ function pnsr_value = Homodyne_Reconstruction(im, ratio, weightingType)
 %    "Step" for step and "Ramp" for ramp. 
 
     %Print initial data
-    figure("Name","Homodyne_Reconstruction");
-    subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
-    subplot(2,5,6), imshow(fft2c(im)), title("Original k-Space Data");
+%     figure("Name","Homodyne_Reconstruction");
+%     subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
+%     subplot(2,5,6), imshow(fft2c(im)), title("Original k-Space Data");
     
     M_pk = fft2c(im); %convert from image space to k-Space 
     [m, n] = size(im); %learn the dimensions of image
@@ -30,16 +30,16 @@ function pnsr_value = Homodyne_Reconstruction(im, ratio, weightingType)
     w_m_pk = ifft2c(w_M_pk); %obtain weighted image space data
     pc_m_pk = w_m_pk.*p; %obtain phase corrected weighted image space data
     image = real(pc_m_pk);
-    pnsr_value = pnsr(image, im);
+    psnr_value = psnr(image, im);
     
     %plot data
-    subplot(2,5,2), imshow(M_pk), title("M_p_k(k_x,k_y)");
-    subplot(2,5,7), imshow(abs(m_pk)), title("m_p_k(x,y)");
-    subplot(2,5,3), imshow(M_s), title("M_s(k_x,k_y)");
-    subplot(2,5,8), imshow(abs(m_s)), title("m_s(x,y)");
-    subplot(2,5,4), imshow(W,[]), title("W(k_y)");
-    subplot(2,5,9), imshow(w_M_pk), title("M_p_k(k_x,k_y)W(k_x,k_y)");
-    subplot(2,5,5), imshow(abs(w_m_pk)), title("m_p_k(x,y)*w(x,y)");  
-    subplot(2,5,10), imshow(abs(image)), title("m(x,y)");
-    figure("Name", "Difference"), imshow(abs(abs(im)-abs(image))*100, []);
+%     subplot(2,5,2), imshow(M_pk), title("M_p_k(k_x,k_y)");
+%     subplot(2,5,7), imshow(abs(m_pk)), title("m_p_k(x,y)");
+%     subplot(2,5,3), imshow(M_s), title("M_s(k_x,k_y)");
+%     subplot(2,5,8), imshow(abs(m_s)), title("m_s(x,y)");
+%     subplot(2,5,4), imshow(W,[]), title("W(k_y)");
+%     subplot(2,5,9), imshow(w_M_pk), title("M_p_k(k_x,k_y)W(k_x,k_y)");
+%     subplot(2,5,5), imshow(abs(w_m_pk)), title("m_p_k(x,y)*w(x,y)");  
+%     subplot(2,5,10), imshow(abs(image)), title("m(x,y)");
+%     figure("Name", "Difference"), imshow(abs(abs(im)-abs(image))*100, []);
 end

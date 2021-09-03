@@ -1,0 +1,20 @@
+
+zeroPadding = [];
+conjSynthesis_wo_PC = [];
+conjSynthesis_w_PC = [];
+homodyne_step = [];
+homodyne_ramp = [];
+pocs10 = [];
+pocs100 = [];
+
+for r = [0.45:0.05:0.95]
+    zeroPadding = [zeroPadding(:), trivial_reconstruction_by_zero_padding(im, r, "V")];
+    conjSynthesis_wo_PC = [conjSynthesis_wo_PC(:), Conjugate_Synthesis_wo_Phase_Correction(im, r)];
+    conjSynthesis_w_PC = [conjSynthesis_w_PC(:), Conjugate_Synthesis_with_Phase_Correction(im, r)];
+    homodyne_step = [homodyne_step(:), Homodyne_Reconstruction(im, r, "Step")];
+    homodyne_ramp = [homodyne_ramp(:), Homodyne_Reconstruction(im, r, "Ramp")];
+    pocs10 = [pocs10(:), POCS(im, r, 10)];
+    pocs100 = [pocs100(:), POCS(im, r, 100)];
+end
+
+figure("Name", "Peak Signal to Noise Ratio(PSNR) of reconstruc
