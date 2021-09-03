@@ -1,4 +1,10 @@
-function Conjugate_Synthesis_with_Phase_Correction(im, ratio)
+function pnsr_value = Conjugate_Synthesis_with_Phase_Correction(im, ratio)
+%This function implements image reconstruction by conjugate synthesis
+%with phase correction algorithm 
+%   -im is the matrix of the image to be reconstructed
+%   -ratio is the amount of data to be hold after dropping k-Space
+    
+
     %Print initial data
     figure("Name","Conjugate_Synthesis_with_Phase_Correction");
     subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
@@ -17,7 +23,9 @@ function Conjugate_Synthesis_with_Phase_Correction(im, ratio)
     M_k = pc_M_pk; 
     M_k(m*ratio:end,:) = conj(flip(flip(M_k(1:m*(1-ratio)+1,:),1),2)); %Conjugate sytnhesis
     image = ifft2c(M_k); %obtain desired image
-    
+  
+    pnsr_value = pnsr(image, im);
+  
     %plot data
     subplot(2,5,2), imshow(M_pk), title("M_p_k(k_x,k_y)");
     subplot(2,5,7), imshow(abs(m_pk)), title("m_p_k(x,y)");

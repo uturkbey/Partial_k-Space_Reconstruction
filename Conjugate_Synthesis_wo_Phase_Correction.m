@@ -1,4 +1,9 @@
-function Conjugate_Synthesis_wo_Phase_Correction(im, ratio)
+function pnsr_value = Conjugate_Synthesis_wo_Phase_Correction(im, ratio)
+%This function implements image reconstruction by conjugate synthesis
+%without phase correction algorithm 
+%   -im is the matrix of the image to be reconstructed
+%   -ratio is the amount of data to be hold after dropping k-Space
+    
     %Print initial data
     subplot(3,3,1), imshow(abs(im)), title("Initial: Image Space") ;
     subplot(3,3,4), imshow(fft2c(im)), title("Initial: k-Space");
@@ -13,9 +18,11 @@ function Conjugate_Synthesis_wo_Phase_Correction(im, ratio)
     subplot(3,3,8), imshow(abs(abs(ifft2c(im_k))-abs(im))), title("After discard: Difference");
     
     im_k(m*ratio:end,:) = conj(flip(flip(im_k(1:m*(1-ratio)+1,:),1),2)); %Conjugate sytnhesis
-
+    image = ifft2c(im_k);
+    pnsr_value = pnsr(image, im);
+    
     %Print final data(after conjugate synthesis)
     subplot(3,3,6), imshow(im_k), title("Final: k-Space");
-    subplot(3,3,3), imshow(abs(ifft2c(im_k))), title("Final: Image Space");
-    subplot(3,3,9), imshow(abs(abs(ifft2c(im_k))-abs(im))), title("After discard: Difference");
+    subplot(3,3,3), imshow(abs(image)), title("Final: Image Space");
+    subplot(3,3,9), imshow(abs(abs(image)-abs(im))), title("After discard: Difference");
 end

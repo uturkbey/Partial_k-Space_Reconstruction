@@ -1,4 +1,10 @@
-function Homodyne_Reconstruction(im, ratio, weightingType)   
+function pnsr_value = Homodyne_Reconstruction(im, ratio, weightingType)   
+%This function implements image reconstruction by Homodyne algorithm 
+%   -im is the matrix of the image to be reconstructed
+%   -ratio is the amount of data to be hold after dropping k-Space
+%   -weigtingType is the type of filter to be used during reconstruction
+%    "Step" for step and "Ramp" for ramp. 
+
     %Print initial data
     figure("Name","Homodyne_Reconstruction");
     subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
@@ -24,6 +30,7 @@ function Homodyne_Reconstruction(im, ratio, weightingType)
     w_m_pk = ifft2c(w_M_pk); %obtain weighted image space data
     pc_m_pk = w_m_pk.*p; %obtain phase corrected weighted image space data
     image = real(pc_m_pk);
+    pnsr_value = pnsr(image, im);
     
     %plot data
     subplot(2,5,2), imshow(M_pk), title("M_p_k(k_x,k_y)");
