@@ -6,10 +6,10 @@ function psnr_value = Homodyne_Reconstruction(im, ratio, weightingType)
 %    "Step" for step and "Ramp" for ramp. 
 
     %Print initial data
-%     figure("Name","Homodyne_Reconstruction");
-%     subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
-%     subplot(2,5,6), imshow(fft2c(im)), title("Original k-Space Data");
-    
+%      figure("Name","Homodyne_Reconstruction");
+%      subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
+%      subplot(2,5,6), imshow(fft2c(im)), title("Original k-Space Data");
+     
     M_pk = fft2c(im); %convert from image space to k-Space 
     [m, n] = size(im); %learn the dimensions of image
     M_pk(m*ratio:end,:) = 0; %discard the ratio% of the samples at the bottom wrt vertical direction
@@ -24,7 +24,7 @@ function psnr_value = Homodyne_Reconstruction(im, ratio, weightingType)
     if weightingType == "Step"
         W(m*(1-ratio):m*ratio,:) = 1; %symmetric part
     else %weightingType == "Ramp" %linear ramp
-        W(m*(1-ratio):m*ratio,:) = ones(int32(m*(2*ratio-1)) + 1,n).*(2*[(m*(2*ratio-1)):-1:0]'/(m*(2*ratio-1))); %symmetric part
+        W(m*(1-ratio):m*ratio,:) = ones(idivide((m*(2*ratio-1)), int32(1)) + 1,n).*(2*[(m*(2*ratio-1)):-1:0]'/(m*(2*ratio-1))); %symmetric part
     end
     w_M_pk = M_pk.*W; %obtain weighted k-space data
     w_m_pk = ifft2c(w_M_pk); %obtain weighted image space data
