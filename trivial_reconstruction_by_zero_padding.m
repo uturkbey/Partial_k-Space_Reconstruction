@@ -1,4 +1,4 @@
-function psnr_value = trivial_reconstruction_by_zero_padding(im, ratio, flag)
+function [psnr_value, ssim_value] = trivial_reconstruction_by_zero_padding(im, ratio, flag)
 %This function calls the recons_by_zero_padding functions over the image
 %and the range provided. Then prints the results. Which zero padding
 %function will be used is determined by the flag variable. Percentages of zero
@@ -18,7 +18,8 @@ function psnr_value = trivial_reconstruction_by_zero_padding(im, ratio, flag)
 %     subplot(2,2,2), imshow(abs(im_recons)), title("m(x,y)");
 %     subplot(2,2,3), imshow(M_pk), title("M_p_k(k_x,k_y)");
 %     subplot(2,2,4), imshow(fft2c(im_recons)), title("M(k_x,k_y)");
-    psnr_value = psnr(im_recons, im);
+    psnr_value = psnr(abs(im_recons), abs(im));
+    ssim_value = ssim(abs(im_recons), abs(im));
 end
 
 function im_recons = recons_by_zero_padding(im_k_space, ratio, flag)

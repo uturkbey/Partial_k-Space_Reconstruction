@@ -1,4 +1,4 @@
-function psnr_value = Conjugate_Synthesis_wo_Phase_Correction(im, ratio)
+function [psnr_value, ssim_value] = Conjugate_Synthesis_wo_Phase_Correction(im, ratio)
 %This function implements image reconstruction by conjugate synthesis
 %without phase correction algorithm 
 %   -im is the matrix of the image to be reconstructed
@@ -19,7 +19,8 @@ function psnr_value = Conjugate_Synthesis_wo_Phase_Correction(im, ratio)
     
     im_k(m*ratio:end,:) = conj(flip(flip(im_k(1:m*(1-ratio)+1,:),1),2)); %Conjugate sytnhesis
     image = ifft2c(im_k);
-    psnr_value = psnr(image, im);
+    psnr_value = psnr(abs(image), abs(im));
+    ssim_value = ssim(abs(image), abs(im));
     
     %Print final data(after conjugate synthesis)
 %     subplot(3,3,6), imshow(im_k), title("Final: k-Space");

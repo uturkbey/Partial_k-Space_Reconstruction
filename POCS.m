@@ -1,4 +1,4 @@
-function psnr_value = POCS(im, ratio, steps)
+function [psnr_value, ssim_value] = POCS(im, ratio, steps)
 %This function implements image reconstruction by projection over 
 %convex sets(POCS) algorithm 
 %   -im is the matrix of the image to be reconstructed
@@ -42,7 +42,8 @@ function psnr_value = POCS(im, ratio, steps)
 %     subplot(1,2,1), imshow(abs(m_pocs));
 %     subplot(1,2,2), imshow(fft2c(m_pocs));
 
-    psnr_value = psnr(m_pocs, im);
+    psnr_value = psnr(abs(m_pocs), abs(im));
+    ssim_value = ssim(abs(m_pocs), abs(im));
 end 
 
 

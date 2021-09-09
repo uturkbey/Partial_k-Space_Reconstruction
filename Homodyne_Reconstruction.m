@@ -1,4 +1,4 @@
-function psnr_value = Homodyne_Reconstruction(im, ratio, weightingType)   
+function [psnr_value, ssim_value] = Homodyne_Reconstruction(im, ratio, weightingType)   
 %This function implements image reconstruction by Homodyne algorithm 
 %   -im is the matrix of the image to be reconstructed
 %   -ratio is the amount of data to be hold after dropping k-Space
@@ -30,7 +30,8 @@ function psnr_value = Homodyne_Reconstruction(im, ratio, weightingType)
     w_m_pk = ifft2c(w_M_pk); %obtain weighted image space data
     pc_m_pk = w_m_pk.*p; %obtain phase corrected weighted image space data
     image = real(pc_m_pk);
-    psnr_value = psnr(image, im);
+    psnr_value = psnr(abs(image), abs(im));
+    ssim_value = ssim(abs(image), abs(im));
     
     %plot data
 %     subplot(2,5,2), imshow(M_pk), title("M_p_k(k_x,k_y)");
