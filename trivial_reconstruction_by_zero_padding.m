@@ -1,42 +1,45 @@
 function [psnr_value, ssim_value] = trivial_reconstruction_by_zero_padding(im, ratio, flag)
-%This function calls the recons_by_zero_padding functions over the image
-%and the range provided. Then prints the results. Which zero padding
-%function will be used is determined by the flag variable. Percentages of zero
-%padding is decided by linear partition of range over six intervals.
-%   -im is the matrix of the image to be reconstructed
-%   -ratio is the amount of data to be hold after dropping k-Space
-%   -flag is a string value to indicate which function to be called. "V"
-%   for vertical and "H" for horizontal 
-    if flag == "V"
-%         figure("Name", "Reconstructed Image(Magnitude) in time domain (vertical)")
-    else 
-%         figure("Name", "Reconstructed Image(Magnitude) in time domain (horizontal)")
-    end 
-    M_pk = fft2c(im);
-    im_recons = recons_by_zero_padding(M_pk, ratio, flag);
-%     subplot(2,2,1), imshow(abs(im)), title("m_p_k(x,y)");
-%     subplot(2,2,2), imshow(abs(im_recons)), title("m(x,y)");
-%     subplot(2,2,3), imshow(M_pk), title("M_p_k(k_x,k_y)");
-%     subplot(2,2,4), imshow(fft2c(im_recons)), title("M(k_x,k_y)");
-    psnr_value = psnr(abs(im_recons), abs(im));
-    ssim_value = ssim(abs(im_recons), abs(im));
-end
-
-function im_recons = recons_by_zero_padding(im_k_space, ratio, flag)
-%This function is for reconstructing images given as k-Space data with zero 
-%padding in either horizontal or vertical direction at the given percantage
-%   -im_k_space is the supplied raw data containing image
-%   -ratio is the amount of data to be hold after dropping k-Space
-%   -flag is a string value to indicate which algorithm should be executed.
-%   "V" for vertical and "H" for horizontal 
-    [m, n] = size(im_k_space); 
-    im_partial_k_space = zeros(m, n);
+%This function implements the trivial zero padding reconstruction
+%algorithm from the domain of Partial Fourier Reconstruction methods.
+%Note: Some optional figures are provided as well. In order to obtain those
+%figures, uncomment the necessary lines of code between the dashed lines. 
+%Arguments:
+%   -im is the 2D matrix of the full k-Space image to be first down-sampled 
+%   to partial k-Space and then reconstructed.
+%   -ratio is the partial k-Space ratio to be used during down-sampling. 
+%   -flag is a string value to indicate which function to be called. 
+%   "V" for vertical and "H" for horizontal zero padding.
+%Return:
+%   -psnr_value is the Peak Signal to Noise Ratio (PSNR) value of the
+%   reconstructed magintude image wrt the original magnitude image 
+%   -ssim_value is the Structural Similarity (SSIM) value of the
+%   reconstructed magintude image wrt the original magnitude image 
+    
+    M = fft2c(im);       
+    [m, n] = size(M); 
+    M_pk = M;
     if flag == "V"    
-        im_partial_k_space(1:m*ratio, 1:n) = im_k_space(1:m*ratio, 1:n);
+        M_pk(m*ratio:end,:) = 0;
     else 
-        im_partial_k_space(1:m, 1:n*ratio) = im_k_space(1:m, 1:n*ratio); 
+        M_pk(:,n*ratio:end) = 0; 
     end
-    im_recons = ifft2c(im_partial_k_space);
-end
+    m_pk = ifft2c(M_pk);
+    
+%--------------------------------------------------------------------------    
+    if flag == "V"
+         figure("Name", "Reconstruction with Zero Padding (Vertical)")
+    else 
+         figure("Name", "Reconstruction with Zero Padding (Horizontal)")
+    end
+    subplot(3,2,1), imshow(abs(im)), title("m(x,y)");
+    subplot(3,2,2), imshow(abs(m_pk)), title("m_p_k(x,y)");
+    subplot(3,2,3), imshow(M), title("M(k_x,k_y)");
+    subplot(3,2,4), imshow(fft2c(m_pk)), title("M_p_k(k_x,k_y)");
+    subplot(3,2,5), imshow(abs(abs(im)-abs(m_pk))), title("||m(x,y)|-|m_p_k(x,y)||");
+    subplot(3,2,6), imshow(abs(abs(im)-abs(m_pk))*5), title("||m(x,y)|-|m_p_k(x,y)||x5");
+%--------------------------------------------------------------------------
 
+    psnr_value = psnr(abs(m_pk), abs(im));
+    ssim_value = ssim(abs(m_pk), abs(im));
+end
 

@@ -1,15 +1,31 @@
 function [psnr_value, ssim_value] = Homodyne_Reconstruction(im, ratio, weightingType)   
-%This function implements image reconstruction by Homodyne algorithm 
-%   -im is the matrix of the image to be reconstructed
-%   -ratio is the amount of data to be hold after dropping k-Space
+%This function implements the Homodyne reconstruction algorithm from the 
+%domain of Partial Fourier Reconstruction methods.
+%Note: Some optional figures are provided as well. In order to obtain those
+%figures, uncomment the necessary lines of code between the dashed lines. 
+%Arguments:
+%   -im is the 2D matrix of the full k-Space image to be first down-sampled 
+%   to partial k-Space and then reconstructed.
+%   -ratio is the partial k-Space ratio to be used during down-sampling. 
 %   -weigtingType is the type of filter to be used during reconstruction
-%    "Step" for step and "Ramp" for ramp. 
+%   "Step" for step and "Ramp" for ramp. 
+%Return:
+%   -psnr_value is the Peak Signal to Noise Ratio (PSNR) value of the
+%   reconstructed magintude image wrt the original magnitude image 
+%   -ssim_value is the Structural Similarity (SSIM) value of the
+%   reconstructed magintude image wrt the original magnitude image 
 
+%--------------------------------------------------------------------------
     %Print initial data
-%      figure("Name","Homodyne_Reconstruction");
-%      subplot(2,5,1), imshow(abs(im)), title("Original Image Space Data") ;
-%      subplot(2,5,6), imshow(fft2c(im)), title("Original k-Space Data");
-     
+    if weightingType == "Step"
+       figure("Name","Reconstruction with Homodyne (Step)");
+    else %weightingType == "Ramp" %linear ramp
+       figure("Name","Reconstruction with Homodyne (Ramp)");
+    end
+    subplot(2,5,1), imshow(abs(im)), title("m(x,y)") ;
+    subplot(2,5,6), imshow(fft2c(im)), title("M(x,y)");
+%-------------------------------------------------------------------------- 
+
     M_pk = fft2c(im); %convert from image space to k-Space 
     [m, n] = size(im); %learn the dimensions of image
     M_pk(m*ratio:end,:) = 0; %discard the ratio% of the samples at the bottom wrt vertical direction
@@ -32,15 +48,26 @@ function [psnr_value, ssim_value] = Homodyne_Reconstruction(im, ratio, weighting
     image = real(pc_m_pk);
     psnr_value = psnr(abs(image), abs(im));
     ssim_value = ssim(abs(image), abs(im));
-    
+
+%--------------------------------------------------------------------------
     %plot data
-%     subplot(2,5,2), imshow(M_pk), title("M_p_k(k_x,k_y)");
-%     subplot(2,5,7), imshow(abs(m_pk)), title("m_p_k(x,y)");
-%     subplot(2,5,3), imshow(M_s), title("M_s(k_x,k_y)");
-%     subplot(2,5,8), imshow(abs(m_s)), title("m_s(x,y)");
-%     subplot(2,5,4), imshow(W,[]), title("W(k_y)");
-%     subplot(2,5,9), imshow(w_M_pk), title("M_p_k(k_x,k_y)W(k_x,k_y)");
-%     subplot(2,5,5), imshow(abs(w_m_pk)), title("m_p_k(x,y)*w(x,y)");  
-%     subplot(2,5,10), imshow(abs(image)), title("m(x,y)");
-%     figure("Name", "Difference"), imshow(abs(abs(im)-abs(image))*100, []);
+    subplot(2,5,7), imshow(M_pk), title("M_p_k(k_x,k_y)");
+    subplot(2,5,2), imshow(abs(m_pk)), title("m_p_k(x,y)");
+    subplot(2,5,8), imshow(M_s), title("M_s(k_x,k_y)");
+    subplot(2,5,3), imshow(abs(m_s)), title("m_s(x,y)");
+    subplot(2,5,4), imshow(W,[]), title("W(k_y)");
+    subplot(2,5,9), imshow(w_M_pk), title("M_w = M_p_k(k_x,k_y)W(k_y)");
+    subplot(2,5,5), imshow(abs(w_m_pk)), title("m_w = m_p_k(x,y)*w(y)");  
+    subplot(2,5,10), imshow(abs(image)), title("(Phase Corrected) m_w_-_p_c(x,y)");
+    if weightingType == "Step"
+       figure("Name","Reconstruction with Homodyne (Step) Differences");
+    else %weightingType == "Ramp" %linear ramp
+       figure("Name","Reconstruction with Homodyne (Ramp) Differences");
+    end
+    subplot(1,2,1), imshow(abs(abs(im)-abs(w_m_pk))*5), title("||m(x,y)|-|m_w(x,y)||x5");
+    subplot(1,2,2), imshow(abs(abs(im)-abs(image))*5), title("||m(x,y)|-|m_w_-_p_c(x,y)||x5");
+    
+    figure("Name","W"), mesh(W);
+%--------------------------------------------------------------------------
+
 end
