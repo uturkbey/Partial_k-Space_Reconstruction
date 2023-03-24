@@ -1,5 +1,5 @@
 # Partial_k-Space_Reconstruction
-This repo includes various basic k-Space, i.e. half Fourier, reconstruction algorithms from a MR Imaging post processing perspective. 
+This repo includes various basic k-Space, i.e. half Fourier, reconstruction algorithms for MRI post-processing. 
 
 Furthermore, there is a benchmarking aprroach to compare various algortihms by using SSIM and PSNR metrics over the reconstructed images.
 
